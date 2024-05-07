@@ -2,8 +2,6 @@ BIN := {{ cookiecutter.project_slug }}
 
 SRC := $(wildcard *.go **/*.go)
 
-.PHONY: all tidy fmt lint install clean
-
 all: tidy fmt lint vet
 
 .PHONY: tidy
