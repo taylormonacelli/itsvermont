@@ -23,25 +23,21 @@ archives:
                                {{ .Arch }}
                                {{ end }}
                                {{- if .Arm }}v{{ .Arm }}{{ end }}{% endraw %}
-
   format_overrides:
   - goos: windows
     format: zip
 checksum:
   name_template: checksums.txt
-{% raw %}
-
+{% raw -%}
 snapshot:
   name_template: '{{ incpatch .Version }}-next'
-
-{% endraw %}
+{%- endraw %}
 changelog:
   sort: asc
   filters:
     exclude:
     - '^docs:'
     - '^test:'
-
 brews:
 - name: {{ cookiecutter.project_name }}
   directory: Formula
@@ -50,4 +46,3 @@ brews:
     owner: taylormonacelli
     name: homebrew-tools
     branch: main
-
