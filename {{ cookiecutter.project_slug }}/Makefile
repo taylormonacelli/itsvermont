@@ -2,7 +2,7 @@ BIN := {{ cookiecutter.project_slug }}
 
 SRC := $(wildcard *.go **/*.go)
 
-.DEFAULT_GOAL := $(BIN)
+.DEFAULT_GOAL := all
 
 all: check $(BIN)
 
