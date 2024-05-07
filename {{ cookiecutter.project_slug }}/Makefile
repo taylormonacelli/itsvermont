@@ -12,8 +12,15 @@ check: tidy fmt lint vet
 .PHONY: build
 build: $(BIN)
 
+LDFLAGS = -s -w
+LDFLAGS += -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={% raw %}{{.Version}}{% endraw %}"
+LDFLAGS += -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={% raw %}{{.CommitDate}}{% endraw %}"
+LDFLAGS += -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.GoVersion={% raw %}{{.Env.GOVERSION}}{% endraw %}"
+LDFLAGS += -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.ShortGitSHA={% raw %}{{.ShortCommit}}{% endraw %}"
+LDFLAGS += -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.FullGitSHA={% raw %}{{.FullCommit}}{% endraw %}"
+
 $(BIN): $(SRC)
-	go build -o $@ cmd/main.go
+	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
 .PHONY: tidy
 tidy:

@@ -14,6 +14,13 @@ builds:
   - amd64
   binary: {{ cookiecutter.project_name }}
   id: {{ cookiecutter.project_name }}
+  ldflags:
+  - -s -w
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={% raw %}{{.Version}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={% raw %}{{.CommitDate}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.GoVersion={% raw %}{{.Env.GOVERSION}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.ShortGitSHA={% raw %}{{.ShortCommit}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.FullGitSHA={% raw %}{{.FullCommit}}{% endraw %}"
 archives:
 - format: tar.gz
   name_template: |-
