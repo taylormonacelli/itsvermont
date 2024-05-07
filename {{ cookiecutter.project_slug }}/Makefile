@@ -2,7 +2,14 @@ BIN := {{ cookiecutter.project_slug }}
 
 SRC := $(wildcard *.go **/*.go)
 
+.DEFAULT_GOAL := $(BIN)
+
 all: tidy fmt lint vet
+
+check: tidy fmt lint vet
+
+$(BIN): $(SRC) check
+	go build -o $@ cmd/main.go
 
 .PHONY: tidy
 tidy:
@@ -19,9 +26,6 @@ lint:
 .PHONY: vet
 vet:
 	go vet ./...
-
-$(BIN): $(SRC)
-	go build -o $@ cmd/main.go
 
 .PHONY: install
 install: $(BIN)
