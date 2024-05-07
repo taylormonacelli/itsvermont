@@ -2,19 +2,6 @@ BIN := {{ cookiecutter.project_slug }}
 
 SRC := $(wildcard *.go **/*.go)
 
-.DEFAULT_GOAL := iterate
-
-all: check $(BIN) install
-
-.PHONY: iterate
-iterate: check $(BIN)
-
-.PHONY: check
-check: tidy fmt lint vet
-
-.PHONY: build
-build: $(BIN)
-
 DATE := $(shell date)
 GOVERSION := $(shell go version)
 VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
@@ -28,6 +15,19 @@ LDFLAGS += -X '$(PREFIX).Date=$(DATE)'
 LDFLAGS += -X '$(PREFIX).GoVersion=$(GOVERSION)'
 LDFLAGS += -X '$(PREFIX).ShortGitSHA=$(SHORT_SHA)'
 LDFLAGS += -X '$(PREFIX).FullGitSHA=$(FULL_SHA)'
+
+.DEFAULT_GOAL := iterate
+
+all: check $(BIN) install
+
+.PHONY: iterate
+iterate: check $(BIN)
+
+.PHONY: check
+check: tidy fmt lint vet
+
+.PHONY: build
+build: $(BIN)
 
 $(BIN): $(SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
