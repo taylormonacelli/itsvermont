@@ -15,15 +15,14 @@ check: tidy fmt lint vet
 .PHONY: build
 build: $(BIN)
 
-PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
-LDFLAGS = -s -w
-
 DATE := $(shell date)
 GOVERSION := $(shell go version)
 VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
 SHORT_SHA := $(shell git rev-parse --short HEAD)
 FULL_SHA := $(shell git rev-parse HEAD)
 
+PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
+LDFLAGS = -s -w
 LDFLAGS += -X '$(PREFIX).Version=$(VERSION)'
 LDFLAGS += -X '$(PREFIX).Date=$(DATE)'
 LDFLAGS += -X '$(PREFIX).GoVersion=$(GOVERSION)'
