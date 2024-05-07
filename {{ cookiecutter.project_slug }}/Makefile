@@ -9,7 +9,9 @@ all: check $(BIN)
 .PHONY: check
 check: tidy fmt lint vet
 
-build:
+.PHONY: build
+build: $(BIN)
+
 $(BIN): $(SRC)
 	go build -o $@ cmd/main.go
 
