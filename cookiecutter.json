@@ -4,4 +4,3 @@
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
     "github_username": "anonymous"
 }
-  
