@@ -4,7 +4,7 @@ SRC := $(wildcard *.go **/*.go)
 
 .PHONY: all tidy fmt lint install clean
 
-all: tidy fmt lint vet install
+all: tidy fmt lint vet
 
 .PHONY: tidy
 tidy:
