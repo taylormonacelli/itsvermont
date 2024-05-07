@@ -16,7 +16,7 @@ jobs:
         - ubuntu-latest
         - macOS-latest
         - windows-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: {%raw%}${{ matrix.os }}{%endraw%}
     name: Build & Test
     steps:
     - uses: actions/checkout@v3
