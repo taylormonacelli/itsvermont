@@ -4,11 +4,12 @@ SRC := $(wildcard *.go **/*.go)
 
 .DEFAULT_GOAL := $(BIN)
 
-all: tidy fmt lint vet
+all: check $(BIN)
 
+.PHONY: check
 check: tidy fmt lint vet
 
-$(BIN): $(SRC) check
+$(BIN): $(SRC)
 	go build -o $@ cmd/main.go
 
 .PHONY: tidy
