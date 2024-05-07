@@ -16,13 +16,19 @@ check: tidy fmt lint vet
 build: $(BIN)
 
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
-
 LDFLAGS = -s -w
-LDFLAGS += -X "$(PREFIX).Version={% raw %}{{.Version}}{% endraw %}"
-LDFLAGS += -X "$(PREFIX).Date={% raw %}{{.CommitDate}}{% endraw %}"
-LDFLAGS += -X "$(PREFIX).GoVersion={% raw %}{{.Env.GOVERSION}}{% endraw %}"
-LDFLAGS += -X "$(PREFIX).ShortGitSHA={% raw %}{{.ShortCommit}}{% endraw %}"
-LDFLAGS += -X "$(PREFIX).FullGitSHA={% raw %}{{.FullCommit}}{% endraw %}"
+
+DATE := $(shell date)
+GOVERSION := $(shell go version)
+VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
+SHORT_SHA := $(shell git rev-parse --short HEAD)
+FULL_SHA := $(shell git rev-parse HEAD)
+
+LDFLAGS += -X '$(PREFIX).Version=$(VERSION)'
+LDFLAGS += -X '$(PREFIX).Date=$(DATE)'
+LDFLAGS += -X '$(PREFIX).GoVersion=$(GOVERSION)'
+LDFLAGS += -X '$(PREFIX).ShortGitSHA=$(SHORT_SHA)'
+LDFLAGS += -X '$(PREFIX).FullGitSHA=$(FULL_SHA)'
 
 $(BIN): $(SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
