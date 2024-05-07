@@ -6,6 +6,8 @@ SRC := $(wildcard *.go **/*.go)
 
 all: tidy fmt lint vet install
 
+
+
 .PHONY: tidy
 tidy:
 	go mod tidy
