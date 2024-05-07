@@ -2,9 +2,12 @@ BIN := {{ cookiecutter.project_slug }}
 
 SRC := $(wildcard *.go **/*.go)
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := iterate
 
-all: check $(BIN)
+all: check $(BIN) install
+
+.PHONY: iterate
+iterate: check $(BIN)
 
 .PHONY: check
 check: tidy fmt lint vet
