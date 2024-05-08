@@ -12,8 +12,8 @@ builds:
   main: main.go
   goarch:
   - amd64
-  binary: {{ cookiecutter.project_name }}
-  id: {{ cookiecutter.project_name }}
+  binary: {{ cookiecutter.project_slug }}
+  id: {{ cookiecutter.project_slug }}
   ldflags:
   - -s -w
     -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={% raw %}{{.Version}}{% endraw %}"
@@ -24,7 +24,7 @@ builds:
 archives:
 - format: tar.gz
   name_template: |-
-    {{ cookiecutter.project_name }}_ {% raw %}{{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64
+    {{ cookiecutter.project_slug }}_ {% raw %}{{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64
                                {{- else if eq .Arch "386" }}i386
                                {{- else }}
                                {{ .Arch }}
@@ -46,10 +46,19 @@ changelog:
     - '^docs:'
     - '^test:'
 brews:
-- name: {{ cookiecutter.project_name }}
+- name: {{ cookiecutter.project_slug }}
   directory: Formula
   homepage: https://github.com/{{ cookiecutter.github_username }}/homebrew-tools
   repository:
     owner: {{ cookiecutter.github_username }}
     name: homebrew-tools
     branch: main
+scoops:
+ - name: {{ cookiecutter.project_slug }}
+   homepage: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
+   description: "Description of the {{ cookiecutter.project_slug }} project"
+   license: MIT
+   repository:
+     owner: {{ cookiecutter.github_username }}
+     name: scoop-bucket
+     branch: main
