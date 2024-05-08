@@ -20,42 +20,42 @@ LDFLAGS += -X '$(PREFIX).FullGitSHA=$(FULL_SHA)'
 
 all: check $(BIN) install
 
-.PHONY: iterate
+.PHONY: iterate # lint and rebuild
 iterate: check $(BIN)
 
-.PHONY: check
+.PHONY: check # lint and vet
 check: tidy fmt lint vet
 
-.PHONY: build
+.PHONY: build # build
 build: $(BIN)
 
-$(BIN): $(SRC)
+$(BIN): $(SRC) # $(SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
-.PHONY: tidy
+.PHONY: tidy # go tidy
 tidy:
 	go mod tidy
 
-.PHONY: fmt
+.PHONY: fmt # go fmt
 fmt:
 	gofumpt -w .
 
-.PHONY: lint
+.PHONY: lint # lint
 lint:
 	golangci-lint run
 
-.PHONY: vet
+.PHONY: vet # go vet
 vet:
 	go vet ./...
 
-.PHONY: install
+.PHONY: install # go install
 install: $(BIN)
 	go install
 
-.PHONY: help
+.PHONY: help # show makefile rules
 help:
 	@grep '^.PHONY: .* #' Makefile | sed 's/\.PHONY: \(.*\) # \(.*\)/\1	\2/' | expand -t20
 
-.PHONY: clean
+.PHONY: clean # clean bin
 clean:
 	$(RM) $(BIN)
