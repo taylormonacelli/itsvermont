@@ -48,8 +48,8 @@ changelog:
 brews:
 - name: {{ cookiecutter.project_name }}
   directory: Formula
-  homepage: https://github.com/taylormonacelli/homebrew-tools
+  homepage: https://github.com/{{ cookiecutter.github_username }}/homebrew-tools
   repository:
-    owner: taylormonacelli
+    owner: {{ cookiecutter.github_username }}
     name: homebrew-tools
     branch: main
