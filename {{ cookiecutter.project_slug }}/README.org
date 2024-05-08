@@ -1,7 +1,0 @@
-* {{ cookiecutter.project_slug }}
-
-This is a description of my {{ cookiecutter.project_slug }}.
-
-** Usage
-
-To use my project, run this command: ./{{ cookiecutter.project_slug }} --verbose
