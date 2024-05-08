@@ -17,7 +17,7 @@ builds:
   ldflags:
   - -s -w
     -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={% raw %}{{.Version}}{% endraw %}"
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={% raw %}{{.CommitDate}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={% raw %}{{.CommitDate.Format \"2006-01-02T15:04:05Z\"}}{% endraw %}"
     -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.GoVersion={% raw %}{{.Env.GOVERSION}}{% endraw %}"
     -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.ShortGitSHA={% raw %}{{.ShortCommit}}{% endraw %}"
     -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.FullGitSHA={% raw %}{{.FullCommit}}{% endraw %}"
