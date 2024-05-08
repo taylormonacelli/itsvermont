@@ -52,6 +52,10 @@ vet:
 install: $(BIN)
 	go install
 
+.PHONY: help
+help:
+	@grep '^.PHONY: .* #' Makefile | sed 's/\.PHONY: \(.*\) # \(.*\)/\1	\2/' | expand -t20
+
 .PHONY: clean
 clean:
 	$(RM) $(BIN)
