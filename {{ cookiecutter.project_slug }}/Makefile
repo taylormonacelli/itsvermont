@@ -34,7 +34,7 @@ build: $(BIN)
 $(BIN): $(SRC) # $(SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
-.PHONY: goreleaser
+.PHONY: goreleaser # run goreleaser
 goreleaser:
 	goreleaser --clean
 
