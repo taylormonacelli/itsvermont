@@ -48,7 +48,7 @@ changelog:
 brews:
 - name: {{ cookiecutter.project_slug }}
   directory: Formula
-  homepage: https://github.com/{{ cookiecutter.github_username }}/homebrew-tools
+  homepage: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
   repository:
     owner: {{ cookiecutter.github_username }}
     name: {{ cookiecutter.homebrew_tap }}
