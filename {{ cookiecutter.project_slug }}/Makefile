@@ -12,11 +12,11 @@ export GOVERSION # goreleaser wants this
 
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 LDFLAGS = -s -w
-LDFLAGS += -X '$(PREFIX).Version=$(VERSION)'
+LDFLAGS += -X $(PREFIX).Version=$(VERSION)
 LDFLAGS += -X '$(PREFIX).Date=$(DATE)'
 LDFLAGS += -X '$(PREFIX).GoVersion=$(GOVERSION)'
-LDFLAGS += -X '$(PREFIX).ShortGitSHA=$(SHORT_SHA)'
-LDFLAGS += -X '$(PREFIX).FullGitSHA=$(FULL_SHA)'
+LDFLAGS += -X $(PREFIX).ShortGitSHA=$(SHORT_SHA)
+LDFLAGS += -X $(PREFIX).FullGitSHA=$(FULL_SHA)
 
 .DEFAULT_GOAL := iterate
 
