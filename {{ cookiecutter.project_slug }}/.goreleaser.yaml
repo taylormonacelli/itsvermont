@@ -16,11 +16,11 @@ builds:
   id: {{ cookiecutter.project_slug }}
   ldflags:
   - -s -w
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={% raw %}{{.Version}}{% endraw %}"
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={% raw %}{{.CommitDate}}{% endraw %}"
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.GoVersion={% raw %}{{.Env.GOVERSION}}{% endraw %}"
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.ShortGitSHA={% raw %}{{.ShortCommit}}{% endraw %}"
-    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.FullGitSHA={% raw %}{{.FullCommit}}{% endraw %}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Version={{ "{{" }} .Version {{ "}}" }}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.Date={{ "{{" }} .CommitDate {{ "}}" }}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.GoVersion={{ "{{" }} .Env.GOVERSION {{ "}}" }}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.ShortGitSHA={{ "{{" }} .ShortCommit {{ "}}" }}"
+    -X "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version.FullGitSHA={{ "{{" }} .FullCommit {{ "}}" }}"
 archives:
 - format: tar.gz
   name_template: |-
