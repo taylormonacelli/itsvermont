@@ -47,29 +47,15 @@ func init() {
 	}
 }
 
-// Deps ensures that the required dependencies are installed.
-func Deps() error {
-	if err := sh.Run("go", "get", "github.com/magefile/mage/mg"); err != nil {
-		return err
-	}
-	if err := sh.Run("go", "get", "github.com/magefile/mage/sh"); err != nil {
-		return err
-	}
-	return nil
-}
-
 func Lint() error {
-	mg.Deps(Deps)
 	return sh.Run("golangci-lint", "run")
 }
 
 func Fmt() error {
-	mg.Deps(Deps)
 	return sh.Run("gofumpt", "-w", ".")
 }
 
 func Vet() error {
-	mg.Deps(Deps)
 	return sh.Run("go", "vet", "./...")
 }
 
@@ -78,7 +64,6 @@ func Check() {
 }
 
 func Tidy() error {
-	mg.Deps(Deps)
 	return sh.Run("go", "mod", "tidy")
 }
 
@@ -102,6 +87,5 @@ func Install() error {
 }
 
 func Clean() error {
-	mg.Deps(Deps)
 	return sh.Rm(buildTarget)
 }
