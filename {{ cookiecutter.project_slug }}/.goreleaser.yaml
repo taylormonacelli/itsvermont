@@ -54,11 +54,11 @@ brews:
     name: {{ cookiecutter.homebrew_tap }}
     branch: main
 scoops:
- - name: {{ cookiecutter.project_slug }}
-   homepage: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
-   description: "Description of the {{ cookiecutter.project_slug }} project"
-   license: MIT
-   repository:
-     owner: {{ cookiecutter.github_username }}
-     name: {{ cookiecutter.scoop_bucket }}
-     branch: main
+- name: {{ cookiecutter.project_slug }}
+  homepage: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
+  description: "Description of the {{ cookiecutter.project_slug }} project"
+  license: MIT
+  repository:
+    owner: {{ cookiecutter.github_username }}
+    name: {{ cookiecutter.scoop_bucket }}
+    branch: main
