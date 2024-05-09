@@ -1,5 +1,7 @@
 {
     
+    "homebrew_tap": "homebrew-tools",
+    "scoop_bucket": "scoop-bucket",
     "author": "Anonymous",
     "project_name": "Cookiecutter Website Simple",
     "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",

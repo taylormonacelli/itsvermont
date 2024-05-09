@@ -51,7 +51,7 @@ brews:
   homepage: https://github.com/{{ cookiecutter.github_username }}/homebrew-tools
   repository:
     owner: {{ cookiecutter.github_username }}
-    name: homebrew-tools
+    name: {{ cookiecutter.homebrew_tap }}
     branch: main
 scoops:
  - name: {{ cookiecutter.project_slug }}
@@ -60,5 +60,5 @@ scoops:
    license: MIT
    repository:
      owner: {{ cookiecutter.github_username }}
-     name: scoop-bucket
+     name: {{ cookiecutter.scoop_bucket }}
      branch: main
