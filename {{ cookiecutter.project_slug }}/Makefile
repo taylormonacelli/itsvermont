@@ -8,6 +8,8 @@ VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
 SHORT_SHA := $(shell git rev-parse --short HEAD)
 FULL_SHA := $(shell git rev-parse HEAD)
 
+export GOVERSION
+
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 LDFLAGS = -s -w
 LDFLAGS += -X '$(PREFIX).Version=$(VERSION)'
@@ -31,6 +33,10 @@ build: $(BIN)
 
 $(BIN): $(SRC) # $(SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
+
+.PHONY: goreleaser
+goreleaser:
+	goreleaser --clean
 
 .PHONY: tidy # go tidy
 tidy:
