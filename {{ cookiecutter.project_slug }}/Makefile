@@ -8,7 +8,7 @@ VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
 SHORT_SHA := $(shell git rev-parse --short HEAD)
 FULL_SHA := $(shell git rev-parse HEAD)
 
-export GOVERSION
+export GOVERSION # goreleaser wants this
 
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 LDFLAGS = -s -w
