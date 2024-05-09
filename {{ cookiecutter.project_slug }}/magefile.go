@@ -18,12 +18,10 @@ var (
 	fullGitSHA  = ""
 )
 
-
 const (
 	ldFlagsPrefix = "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version"
 	buildTarget   = "{{ cookiecutter.project_slug }}"
 )
-
 
 func init() {
 	var err error
