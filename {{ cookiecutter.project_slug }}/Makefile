@@ -44,7 +44,7 @@ tidy:
 
 .PHONY: fmt # go fmt
 fmt:
-	gofumpt -w .
+	gofumpt -w $(SRC)
 
 .PHONY: lint # lint
 lint:
