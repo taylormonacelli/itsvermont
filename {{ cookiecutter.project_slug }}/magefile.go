@@ -5,6 +5,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -86,7 +88,21 @@ func Tidy() error {
 func Build() error {
 	mg.Deps(Tidy)
 
-	if rebuild, err := target.Glob(buildTarget, "*.go", "**/*.go", "go.mod", "go.sum"); err != nil || !rebuild {
+	buildTime := time.Time{}
+	if _, err := os.Stat(buildTarget); err == nil {
+		buildTime, err = target.NewestModTime(buildTarget)
+		if err != nil {
+			return err
+		}
+	}
+
+	sources, err := getSourceFiles(".")
+	if err != nil {
+		return err
+	}
+	sources = append(sources, "go.mod", "go.sum")
+
+	if rebuild, err := target.DirNewer(buildTime, sources...); err != nil || !rebuild {
 		if err != nil {
 			return err
 		}
@@ -101,7 +117,7 @@ func Build() error {
 		ldFlagsPrefix, fullGitSHA,
 	)
 
-	return sh.Run("go", "build", "-ldflags", ldflags, "-o", buildTarget, "cmd/main.go")
+	return sh.Run("go", "build", "-ldflags", ldflags, "-o", buildTarget)
 }
 
 func Install() error {
@@ -111,4 +127,21 @@ func Install() error {
 
 func Clean() error {
 	return sh.Rm(buildTarget)
+}
+
+func getSourceFiles(dir string) ([]string, error) {
+	var sources []string
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && filepath.Ext(path) == ".go" {
+			sources = append(sources, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return sources, nil
 }
