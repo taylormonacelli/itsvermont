@@ -86,7 +86,7 @@ func Tidy() error {
 func Build() error {
 	mg.Deps(Tidy)
 
-	if rebuild, err := target.Glob(buildTarget, "*.go", "go.mod", "go.sum"); err != nil || !rebuild {
+	if rebuild, err := target.Glob(buildTarget, "*.go", "**/*.go", "go.mod", "go.sum"); err != nil || !rebuild {
 		if err != nil {
 			return err
 		}
