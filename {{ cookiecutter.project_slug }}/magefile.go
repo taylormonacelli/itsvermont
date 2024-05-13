@@ -129,14 +129,22 @@ func Clean() error {
 	return sh.Rm(buildTarget)
 }
 
-func getSourceFiles(dir string) ([]string, error) {
+func getSourceFiles(dir string, exts ...string) ([]string, error) {
+	if len(exts) == 0 {
+		exts = []string{".go"}
+	}
 	var sources []string
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() && filepath.Ext(path) == ".go" {
-			sources = append(sources, path)
+		if !info.IsDir() {
+			for _, ext := range exts {
+				if filepath.Ext(path) == ext {
+					sources = append(sources, path)
+					break
+				}
+			}
 		}
 		return nil
 	})
