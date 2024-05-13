@@ -5,6 +5,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/go-git/go-git/v5"
@@ -82,8 +84,54 @@ func Tidy() error {
 	return sh.Run("go", "mod", "tidy")
 }
 
+func shouldRebuild() (bool, error) {
+	sources := []string{}
+	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if filepath.Ext(path) == ".go" || path == "go.mod" || path == "go.sum" {
+			sources = append(sources, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return false, err
+	}
+
+	buildTime := time.Now()
+	if _, err := os.Stat(buildTarget); err == nil {
+		info, err := os.Stat(buildTarget)
+		if err != nil {
+			return false, err
+		}
+		buildTime = info.ModTime()
+	}
+
+	for _, source := range sources {
+		info, err := os.Stat(source)
+		if err != nil {
+			return false, err
+		}
+		if info.ModTime().After(buildTime) {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 func Build() error {
 	mg.Deps(Tidy)
+
+	rebuild, err := shouldRebuild()
+	if err != nil {
+		return err
+	}
+
+	if !rebuild {
+		return nil
+	}
 
 	ldflags := fmt.Sprintf(`-s -w -X '%s.Version=%s' -X '%s.Date=%s' -X '%s.GoVersion=%s' -X '%s.ShortGitSHA=%s' -X '%s.FullGitSHA=%s'`,
 		ldFlagsPrefix, version,
