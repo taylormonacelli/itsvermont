@@ -5,7 +5,10 @@ package main
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/go-git/go-git/v5"
+	. "github.com/go-git/go-git/v5/_examples"
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
@@ -18,6 +21,8 @@ var (
 	fullGitSHA  = ""
 )
 
+var Default = Iterate // default mage target
+
 const (
 	ldFlagsPrefix = "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version"
 	buildTarget   = "{{ cookiecutter.project_slug }}"
@@ -25,26 +30,36 @@ const (
 
 func init() {
 	var err error
-	version, err = sh.Output("git", "describe", "--tags", "--abbrev=8", "--dirty", "--always", "--long")
-	if err != nil {
-		fmt.Printf("Error getting version: %v\n", err)
+	date = time.Now().UTC().Format(time.RFC3339)
+
+	r, err := git.PlainOpen(".")
+	CheckIfError(err)
+
+	ref, err := r.Head()
+	CheckIfError(err)
+
+	cIter, err := r.Log(&git.LogOptions{From: ref.Hash()})
+	CheckIfError(err)
+
+	commit, err := cIter.Next()
+	CheckIfError(err)
+
+	version = commit.Hash.String()[:8]
+	if commit.NumParents() > 0 {
+		version += "-dirty"
 	}
-	date, err = sh.Output("date", "+%Y-%m-%dT%H:%M:%SZ")
-	if err != nil {
-		fmt.Printf("Error getting date: %v\n", err)
-	}
+
 	goVersion, err = sh.Output("go", "version")
 	if err != nil {
 		fmt.Printf("Error getting Go version: %v\n", err)
 	}
-	shortGitSHA, err = sh.Output("git", "rev-parse", "--short", "HEAD")
-	if err != nil {
-		fmt.Printf("Error getting short Git SHA: %v\n", err)
-	}
-	fullGitSHA, err = sh.Output("git", "rev-parse", "HEAD")
-	if err != nil {
-		fmt.Printf("Error getting full Git SHA: %v\n", err)
-	}
+
+	shortGitSHA = commit.Hash.String()[:7]
+	fullGitSHA = commit.Hash.String()
+}
+
+func Iterate() {
+	mg.Deps(Check, Build)
 }
 
 func Lint() error {

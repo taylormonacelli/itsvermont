@@ -1,3 +1,4 @@
+
 before:
   hooks:
   - go mod tidy
@@ -9,7 +10,7 @@ builds:
   - linux
   - windows
   - darwin
-  main: main.go
+  main: cmd/main.go
   goarch:
   - amd64
   binary: {{ cookiecutter.project_slug }}
