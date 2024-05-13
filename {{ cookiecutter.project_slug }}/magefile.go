@@ -5,14 +5,13 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/go-git/go-git/v5"
 	. "github.com/go-git/go-git/v5/_examples"
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
+	"github.com/magefile/mage/target"
 )
 
 var (
@@ -84,52 +83,13 @@ func Tidy() error {
 	return sh.Run("go", "mod", "tidy")
 }
 
-func shouldRebuild() (bool, error) {
-	sources := []string{}
-	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if filepath.Ext(path) == ".go" || path == "go.mod" || path == "go.sum" {
-			sources = append(sources, path)
-		}
-		return nil
-	})
-	if err != nil {
-		return false, err
-	}
-
-	buildTime := time.Now()
-	if _, err := os.Stat(buildTarget); err == nil {
-		info, err := os.Stat(buildTarget)
-		if err != nil {
-			return false, err
-		}
-		buildTime = info.ModTime()
-	}
-
-	for _, source := range sources {
-		info, err := os.Stat(source)
-		if err != nil {
-			return false, err
-		}
-		if info.ModTime().After(buildTime) {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
-
 func Build() error {
 	mg.Deps(Tidy)
 
-	rebuild, err := shouldRebuild()
-	if err != nil {
-		return err
-	}
-
-	if !rebuild {
+	if rebuild, err := target.Glob(buildTarget, "*.go", "go.mod", "go.sum"); err != nil || !rebuild {
+		if err != nil {
+			return err
+		}
 		return nil
 	}
 
