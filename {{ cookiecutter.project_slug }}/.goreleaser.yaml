@@ -61,4 +61,4 @@ scoops:
   repository:
     owner: {{ cookiecutter.github_username }}
     name: {{ cookiecutter.scoop_bucket }}
-    branch: main
+    branch: master
