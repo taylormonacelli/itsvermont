@@ -64,4 +64,4 @@ help:
 
 .PHONY: clean # clean bin
 clean:
-	$(RM) -rf $(BIN) dist/
+	$(RM) $(BIN)
