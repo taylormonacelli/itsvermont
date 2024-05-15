@@ -219,7 +219,6 @@ func getSourceFiles(dir string, exts ...string) ([]string, error) {
 	if len(exts) == 0 {
 		exts = []string{
 			".go",
-			".cue",
 		}
 	}
 	var sources []string
