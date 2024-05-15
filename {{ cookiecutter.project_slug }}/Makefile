@@ -26,19 +26,19 @@ all: check $(BIN) install
 iterate: check $(BIN)
 
 .PHONY: check # lint and vet
-check: .timestamps/.check_time
+check: .timestamps/.check.time
 
-.timestamps/.check_time: tidy fmt lint vet
+.timestamps/.check.time: tidy fmt lint vet
 	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: build # build
 build: $(BIN)
 
-$(BIN): .timestamps/.build_time
+$(BIN): .timestamps/.build.time
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
-.timestamps/.build_time: $(SRC)
+.timestamps/.build.time: $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -46,33 +46,33 @@ $(BIN): .timestamps/.build_time
 goreleaser: goreleaser --clean
 
 .PHONY: tidy # go tidy
-tidy: .timestamps/.tidy_time
+tidy: .timestamps/.tidy.time
 
-.timestamps/.tidy_time: go.mod go.sum
+.timestamps/.tidy.time: go.mod go.sum
 	go mod tidy
 	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: fmt # go fmt
-fmt: .timestamps/.fmt_time
+fmt: .timestamps/.fmt.time
 
-.timestamps/.fmt_time: $(SRC)
+.timestamps/.fmt.time: $(SRC)
 	gofumpt -w .
 	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: lint # lint
-lint: .timestamps/.lint_time
+lint: .timestamps/.lint.time
 
-.timestamps/.lint_time: $(SRC)
+.timestamps/.lint.time: $(SRC)
 	golangci-lint run
 	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: vet # go vet
-vet: .timestamps/.vet_time
+vet: .timestamps/.vet.time
 
-.timestamps/.vet_time: $(SRC)
+.timestamps/.vet.time: $(SRC)
 	go vet ./...
 	@mkdir -p .timestamps
 	@touch $@
