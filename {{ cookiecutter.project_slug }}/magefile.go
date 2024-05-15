@@ -66,15 +66,87 @@ func Iterate() {
 }
 
 func Lint() error {
-	return sh.Run("golangci-lint", "run")
+	sources, err := getSourceFiles(".")
+	if err != nil {
+		return err
+	}
+
+	lintTime := time.Time{}
+	if _, err := os.Stat(".lint.time"); err == nil {
+		lintTime, err = target.NewestModTime(".lint.time")
+		if err != nil {
+			return err
+		}
+	}
+
+	if rebuild, err := target.DirNewer(lintTime, sources...); err != nil || !rebuild {
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := sh.Run("golangci-lint", "run"); err != nil {
+		return err
+	}
+
+	return touch(".lint.time")
 }
 
 func Fmt() error {
-	return sh.Run("gofumpt", "-w", ".")
+	sources, err := getSourceFiles(".")
+	if err != nil {
+		return err
+	}
+
+	fmtTime := time.Time{}
+	if _, err := os.Stat(".fmt.time"); err == nil {
+		fmtTime, err = target.NewestModTime(".fmt.time")
+		if err != nil {
+			return err
+		}
+	}
+
+	if rebuild, err := target.DirNewer(fmtTime, sources...); err != nil || !rebuild {
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := sh.Run("gofumpt", "-w", "."); err != nil {
+		return err
+	}
+
+	return touch(".fmt.time")
 }
 
 func Vet() error {
-	return sh.Run("go", "vet", "./...")
+	sources, err := getSourceFiles(".")
+	if err != nil {
+		return err
+	}
+
+	vetTime := time.Time{}
+	if _, err := os.Stat(".vet.time"); err == nil {
+		vetTime, err = target.NewestModTime(".vet.time")
+		if err != nil {
+			return err
+		}
+	}
+
+	if rebuild, err := target.DirNewer(vetTime, sources...); err != nil || !rebuild {
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := sh.Run("go", "vet", "./..."); err != nil {
+		return err
+	}
+
+	return touch(".vet.time")
 }
 
 func Check() {
@@ -82,12 +154,30 @@ func Check() {
 }
 
 func Tidy() error {
-	return sh.Run("go", "mod", "tidy")
+	tidyTime := time.Time{}
+	if _, err := os.Stat(".tidy.time"); err == nil {
+		tidyTime, err = target.NewestModTime(".tidy.time")
+		if err != nil {
+			return err
+		}
+	}
+
+	if rebuild, err := target.DirNewer(tidyTime, "go.mod", "go.sum"); err != nil || !rebuild {
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := sh.Run("go", "mod", "tidy"); err != nil {
+		return err
+	}
+
+	return touch(".tidy.time")
 }
 
 func Build() error {
 	mg.Deps(Tidy)
-
 	buildTime := time.Time{}
 	if _, err := os.Stat(buildTarget); err == nil {
 		buildTime, err = target.NewestModTime(buildTarget)
@@ -95,20 +185,17 @@ func Build() error {
 			return err
 		}
 	}
-
 	sources, err := getSourceFiles(".")
 	if err != nil {
 		return err
 	}
 	sources = append(sources, "go.mod", "go.sum")
-
 	if rebuild, err := target.DirNewer(buildTime, sources...); err != nil || !rebuild {
 		if err != nil {
 			return err
 		}
 		return nil
 	}
-
 	ldflags := fmt.Sprintf(`-s -w -X '%s.Version=%s' -X '%s.Date=%s' -X '%s.GoVersion=%s' -X '%s.ShortGitSHA=%s' -X '%s.FullGitSHA=%s'`,
 		ldFlagsPrefix, version,
 		ldFlagsPrefix, date,
@@ -116,7 +203,6 @@ func Build() error {
 		ldFlagsPrefix, shortGitSHA,
 		ldFlagsPrefix, fullGitSHA,
 	)
-
 	return sh.Run("go", "build", "-ldflags", ldflags, "-o", buildTarget)
 }
 
@@ -131,7 +217,10 @@ func Clean() error {
 
 func getSourceFiles(dir string, exts ...string) ([]string, error) {
 	if len(exts) == 0 {
-		exts = []string{".go"}
+		exts = []string{
+			".go",
+			".cue",
+		}
 	}
 	var sources []string
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -152,4 +241,12 @@ func getSourceFiles(dir string, exts ...string) ([]string, error) {
 		return nil, err
 	}
 	return sources, nil
+}
+
+func touch(file string) error {
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	return f.Close()
 }
