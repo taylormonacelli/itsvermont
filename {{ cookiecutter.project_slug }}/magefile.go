@@ -72,8 +72,8 @@ func Lint() error {
 	}
 
 	lintTime := time.Time{}
-	if _, err := os.Stat(".lint.time"); err == nil {
-		lintTime, err = target.NewestModTime(".lint.time")
+	if _, err := os.Stat(".timestamps/.lint.time"); err == nil {
+		lintTime, err = target.NewestModTime(".timestamps/.lint.time")
 		if err != nil {
 			return err
 		}
@@ -90,7 +90,7 @@ func Lint() error {
 		return err
 	}
 
-	return touch(".lint.time")
+	return touch(".timestamps/.lint.time")
 }
 
 func Fmt() error {
@@ -100,8 +100,8 @@ func Fmt() error {
 	}
 
 	fmtTime := time.Time{}
-	if _, err := os.Stat(".fmt.time"); err == nil {
-		fmtTime, err = target.NewestModTime(".fmt.time")
+	if _, err := os.Stat(".timestamps/.fmt.time"); err == nil {
+		fmtTime, err = target.NewestModTime(".timestamps/.fmt.time")
 		if err != nil {
 			return err
 		}
@@ -118,7 +118,7 @@ func Fmt() error {
 		return err
 	}
 
-	return touch(".fmt.time")
+	return touch(".timestamps/.fmt.time")
 }
 
 func Vet() error {
@@ -128,8 +128,8 @@ func Vet() error {
 	}
 
 	vetTime := time.Time{}
-	if _, err := os.Stat(".vet.time"); err == nil {
-		vetTime, err = target.NewestModTime(".vet.time")
+	if _, err := os.Stat(".timestamps/.vet.time"); err == nil {
+		vetTime, err = target.NewestModTime(".timestamps/.vet.time")
 		if err != nil {
 			return err
 		}
@@ -146,7 +146,7 @@ func Vet() error {
 		return err
 	}
 
-	return touch(".vet.time")
+	return touch(".timestamps/.vet.time")
 }
 
 func Check() {
@@ -155,8 +155,8 @@ func Check() {
 
 func Tidy() error {
 	tidyTime := time.Time{}
-	if _, err := os.Stat(".tidy.time"); err == nil {
-		tidyTime, err = target.NewestModTime(".tidy.time")
+	if _, err := os.Stat(".timestamps/.tidy.time"); err == nil {
+		tidyTime, err = target.NewestModTime(".timestamps/.tidy.time")
 		if err != nil {
 			return err
 		}
@@ -173,7 +173,7 @@ func Tidy() error {
 		return err
 	}
 
-	return touch(".tidy.time")
+	return touch(".timestamps/.tidy.time")
 }
 
 func Build() error {
@@ -212,7 +212,10 @@ func Install() error {
 }
 
 func Clean() error {
-	return sh.Rm(buildTarget)
+	if err := sh.Rm(buildTarget); err != nil {
+		return err
+	}
+	return os.RemoveAll(".timestamps")
 }
 
 func getSourceFiles(dir string, exts ...string) ([]string, error) {
@@ -243,6 +246,10 @@ func getSourceFiles(dir string, exts ...string) ([]string, error) {
 }
 
 func touch(file string) error {
+	dir := filepath.Dir(file)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
 	f, err := os.Create(file)
 	if err != nil {
 		return err

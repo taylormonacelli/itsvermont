@@ -7,10 +7,10 @@ GOVERSION := $(shell go version)
 VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
 SHORT_SHA := $(shell git rev-parse --short HEAD)
 FULL_SHA := $(shell git rev-parse HEAD)
-
 export GOVERSION # goreleaser wants this
 
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
+
 LDFLAGS = -s -w
 LDFLAGS += -X $(PREFIX).Version=$(VERSION)
 LDFLAGS += -X '$(PREFIX).Date=$(DATE)'
@@ -26,33 +26,56 @@ all: check $(BIN) install
 iterate: check $(BIN)
 
 .PHONY: check # lint and vet
-check: tidy fmt lint vet
+check: .timestamps/.check_time
+
+.timestamps/.check_time: tidy fmt lint vet
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: build # build
 build: $(BIN)
 
-$(BIN): $(SRC)
+$(BIN): .timestamps/.build_time
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
+.timestamps/.build_time: $(SRC)
+	@mkdir -p .timestamps
+	@touch $@
+
 .PHONY: goreleaser # run goreleaser
-goreleaser:
-	goreleaser --clean
+goreleaser: goreleaser --clean
 
 .PHONY: tidy # go tidy
-tidy:
+tidy: .timestamps/.tidy_time
+
+.timestamps/.tidy_time: go.mod go.sum
 	go mod tidy
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: fmt # go fmt
-fmt:
+fmt: .timestamps/.fmt_time
+
+.timestamps/.fmt_time: $(SRC)
 	gofumpt -w .
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: lint # lint
-lint:
+lint: .timestamps/.lint_time
+
+.timestamps/.lint_time: $(SRC)
 	golangci-lint run
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: vet # go vet
-vet:
+vet: .timestamps/.vet_time
+
+.timestamps/.vet_time: $(SRC)
 	go vet ./...
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: install # go install
 install: $(BIN)
@@ -60,8 +83,8 @@ install: $(BIN)
 
 .PHONY: help # show makefile rules
 help:
-	@grep '^.PHONY: .* #' Makefile | sed 's/\.PHONY: \(.*\) # \(.*\)/\1	\2/' | expand -t20
+	@grep '^.PHONY: .* #' Makefile | sed 's/\.PHONY: \(.*\) # \(.*\)/\1 \2/' | expand -t20
 
 .PHONY: clean # clean bin
 clean:
-	$(RM) $(BIN)
+	$(RM) -r $(BIN) .timestamps
