@@ -247,7 +247,7 @@ func getSourceFiles(dir string, exts ...string) ([]string, error) {
 
 func touch(file string) error {
 	dir := filepath.Dir(file)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
 	f, err := os.Create(file)
