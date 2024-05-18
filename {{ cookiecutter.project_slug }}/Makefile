@@ -56,7 +56,7 @@ tidy: .timestamps/.tidy.time
 fmt: .timestamps/.fmt.time
 
 .timestamps/.fmt.time: $(SRC)
-	gofumpt -w .
+	gofumpt -w $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
