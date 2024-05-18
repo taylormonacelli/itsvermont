@@ -1,4 +1,5 @@
 BIN := {{ cookiecutter.project_slug }}
+PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 
 SRC := $(wildcard *.go **/*.go)
 
@@ -8,8 +9,6 @@ VERSION := $(shell git describe --tags --abbrev=8 --dirty --always --long)
 SHORT_SHA := $(shell git rev-parse --short HEAD)
 FULL_SHA := $(shell git rev-parse HEAD)
 export GOVERSION # goreleaser wants this
-
-PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 
 LDFLAGS = -s -w
 LDFLAGS += -X $(PREFIX).Version=$(VERSION)
