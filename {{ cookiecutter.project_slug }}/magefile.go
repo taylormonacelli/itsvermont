@@ -54,7 +54,7 @@ func init() {
 
 	goVersion, err = sh.Output("go", "version")
 	if err != nil {
-		fmt.Printf("Error getting Go version: %v\n", err)
+		fmt.Printf("error getting Go version: %v\n", err)
 	}
 
 	shortGitSHA = commit.Hash.String()[:7]
@@ -196,19 +196,12 @@ func Build() error {
 		}
 		return nil
 	}
-	ldflags := fmt.Sprintf(`-s -w -X '%s.Version=%s' -X '%s.Date=%s' -X '%s.GoVersion=%s' -X '%s.ShortGitSHA=%s' -X '%s.FullGitSHA=%s'`,
-		ldFlagsPrefix, version,
-		ldFlagsPrefix, date,
-		ldFlagsPrefix, goVersion,
-		ldFlagsPrefix, shortGitSHA,
-		ldFlagsPrefix, fullGitSHA,
-	)
-	return sh.Run("go", "build", "-ldflags", ldflags, "-o", buildTarget)
+	return sh.Run("go", "build", "-ldflags", ldflags(), "-o", buildTarget)
 }
 
 func Install() error {
-	mg.Deps(Build)
-	return sh.Run("go", "install")
+	mg.Deps(Tidy)
+	return sh.Run("go", "install", "-ldflags", ldflags())
 }
 
 func Clean() error {
@@ -216,6 +209,16 @@ func Clean() error {
 		return err
 	}
 	return os.RemoveAll(".timestamps")
+}
+
+func ldflags() string {
+	return fmt.Sprintf(`-s -w -X '%s.Version=%s' -X '%s.Date=%s' -X '%s.GoVersion=%s' -X '%s.ShortGitSHA=%s' -X '%s.FullGitSHA=%s'`,
+		ldFlagsPrefix, version,
+		ldFlagsPrefix, date,
+		ldFlagsPrefix, goVersion,
+		ldFlagsPrefix, shortGitSHA,
+		ldFlagsPrefix, fullGitSHA,
+	)
 }
 
 func getSourceFiles(dir string, exts ...string) ([]string, error) {
