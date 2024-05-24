@@ -16,9 +16,7 @@ Purpose:
 on macos/linux:
 ```bash
 
-
 brew install {{ cookiecutter.github_username }}/homebrew-tools/{{ cookiecutter.project_slug }}
-
 
 ```
 
