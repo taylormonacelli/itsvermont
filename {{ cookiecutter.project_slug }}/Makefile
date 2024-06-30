@@ -1,7 +1,7 @@
 BIN := {{ cookiecutter.project_slug }}
 PREFIX := github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}/version
 
-SRC := $(wildcard *.go **/*.go)
+SRC := $(shell find . -name '*.go')
 
 DATE := $(shell date +"%Y-%m-%dT%H:%M:%SZ")
 GOVERSION := $(shell go version)
