@@ -44,7 +44,7 @@ $(BIN): .timestamps/.build.time .timestamps/.tidy.time
 .PHONY: goreleaser # run goreleaser
 goreleaser: goreleaser --clean
 
-.PHONY: tidy # go tidy
+.PHONY: tidy # go mod tidy
 tidy: .timestamps/.tidy.time
 
 .timestamps/.tidy.time: go.mod go.sum
