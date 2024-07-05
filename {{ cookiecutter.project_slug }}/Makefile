@@ -34,7 +34,7 @@ check: .timestamps/.check.time
 .PHONY: build # build
 build: $(BIN)
 
-$(BIN): .timestamps/.build.time
+$(BIN): .timestamps/.build.time .timestamps/.tidy.time
 	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
 .timestamps/.build.time: $(SRC)
