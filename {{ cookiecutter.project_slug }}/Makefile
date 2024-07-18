@@ -27,7 +27,7 @@ iterate: check $(BIN)
 .PHONY: check # lint and vet
 check: .timestamps/.check.time
 
-.timestamps/.check.time: tidy fmt lint vet
+.timestamps/.check.time: tidy fmt imports lint vet
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -43,6 +43,13 @@ $(BIN): .timestamps/.build.time .timestamps/.tidy.time
 
 .PHONY: goreleaser # run goreleaser
 goreleaser: goreleaser --clean
+
+.PHONY: imports # goimports
+imports: .timestamps/.imports.time
+.timestamps/.imports.time: $(SRC)
+	goimports -w $(SRC)
+	@mkdir -p .timestamps
+	@touch $@
 
 .PHONY: tidy # go mod tidy
 tidy: .timestamps/.tidy.time
