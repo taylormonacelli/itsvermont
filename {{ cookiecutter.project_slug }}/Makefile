@@ -63,7 +63,7 @@ tidy: .timestamps/.tidy.time
 fmt: .timestamps/.fmt.time
 
 .timestamps/.fmt.time: $(SRC)
-	gofumpt -w $(SRC)
+	gofumpt -extra -w $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -77,9 +77,15 @@ lint: .timestamps/.lint.time
 
 .PHONY: vet # go vet
 vet: .timestamps/.vet.time
-
 .timestamps/.vet.time: $(SRC)
 	go vet ./...
+	@mkdir -p .timestamps
+	@touch $@
+
+.PHONY: test # go test
+test: .timestamps/.test.time
+.timestamps/.test.time: $(SRC)
+	go test ./...
 	@mkdir -p .timestamps
 	@touch $@
 
