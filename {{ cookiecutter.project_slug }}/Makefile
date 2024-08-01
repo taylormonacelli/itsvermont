@@ -61,7 +61,6 @@ tidy: .timestamps/.tidy.time
 
 .PHONY: fmt # go fmt
 fmt: .timestamps/.fmt.time
-
 .timestamps/.fmt.time: $(SRC)
 	gofumpt -extra -w $(SRC)
 	@mkdir -p .timestamps
