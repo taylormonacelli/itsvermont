@@ -27,7 +27,7 @@ iterate: check $(BIN)
 .PHONY: check # lint and vet
 check: .timestamps/.check.time
 
-.timestamps/.check.time: tidy fmt imports lint vet
+.timestamps/.check.time: tidy fmt goimports lint vet
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -44,10 +44,10 @@ $(BIN): .timestamps/.build.time .timestamps/.tidy.time
 .PHONY: goreleaser # run goreleaser
 goreleaser: goreleaser --clean
 
-.PHONY: imports # goimports
-imports: .timestamps/.imports.time
-.timestamps/.imports.time: $(SRC)
-	goimports -w $(SRC)
+.PHONY: goimports # goimports_revisor
+goimports: .timestamps/.goimports.time
+.timestamps/.goimports.time: $(SRC)
+	goimports-revisor -set-alias -rm-unused -format $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -59,10 +59,17 @@ tidy: .timestamps/.tidy.time
 	@mkdir -p .timestamps
 	@touch $@
 
-.PHONY: fmt # go fmt
+.PHONY: fmt # gofumt
 fmt: .timestamps/.fmt.time
 .timestamps/.fmt.time: $(SRC)
 	gofumpt -extra -w $(SRC)
+	@mkdir -p .timestamps
+	@touch $@
+
+.PHONY: golines # golines
+fmt: .timestamps/.golines.time
+.timestamps/.golines.time: $(SRC)
+	golines -w $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
@@ -89,7 +96,7 @@ test: .timestamps/.test.time
 	@touch $@
 
 .PHONY: install # go install
-install: imports
+install: goimports
 	go install -ldflags "$(LDFLAGS)"
 
 .PHONY: help # show makefile rules
