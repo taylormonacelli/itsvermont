@@ -89,8 +89,7 @@ vet: .timestamps/.vet.time
 	@touch $@
 
 .PHONY: test # go test
-test: .timestamps/.test.time
-.timestamps/.test.time: $(SRC)
+test:
 	go test ./...
 	@mkdir -p .timestamps
 	@touch $@
