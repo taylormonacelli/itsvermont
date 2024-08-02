@@ -44,10 +44,10 @@ $(BIN): .timestamps/.build.time .timestamps/.tidy.time
 .PHONY: goreleaser # run goreleaser
 goreleaser: goreleaser --clean
 
-.PHONY: goimports # goimports_revisor
+.PHONY: goimports # goimports-reviser
 goimports: .timestamps/.goimports.time
 .timestamps/.goimports.time: $(SRC)
-	goimports-revisor -set-alias -rm-unused -format $(SRC)
+	goimports-reviser -set-alias -rm-unused -format $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
