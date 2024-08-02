@@ -67,7 +67,7 @@ fmt: .timestamps/.fmt.time
 	@touch $@
 
 .PHONY: golines # golines
-fmt: .timestamps/.golines.time
+golines: .timestamps/.golines.time
 .timestamps/.golines.time: $(SRC)
 	golines -w $(SRC)
 	@mkdir -p .timestamps
@@ -75,7 +75,6 @@ fmt: .timestamps/.golines.time
 
 .PHONY: lint # lint
 lint: .timestamps/.lint.time
-
 .timestamps/.lint.time: $(SRC)
 	golangci-lint run
 	@mkdir -p .timestamps
