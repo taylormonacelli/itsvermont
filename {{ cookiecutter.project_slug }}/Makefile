@@ -89,7 +89,7 @@ vet: .timestamps/.vet.time
 	@touch $@
 
 .PHONY: test # go test
-test:
+test: goimports
 	go test ./...
 	@mkdir -p .timestamps
 	@touch $@
