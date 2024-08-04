@@ -47,7 +47,8 @@ goreleaser: goreleaser --clean
 .PHONY: goimports # goimports-reviser
 goimports: .timestamps/.goimports.time
 .timestamps/.goimports.time: $(SRC)
-	goimports-reviser -set-alias -rm-unused -format $(SRC)
+	goimports -w $(SRC)
+	goimports-reviser -write=file -set-alias -rm-unused -format $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
