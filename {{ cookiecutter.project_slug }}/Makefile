@@ -48,7 +48,7 @@ goreleaser: goreleaser --clean
 goimports: .timestamps/.goimports.time
 .timestamps/.goimports.time: $(SRC)
 	goimports -w $(SRC)
-	goimports-reviser -write=file -set-alias -rm-unused -format $(SRC)
+	goimports-reviser -output=file -set-alias -rm-unused -format $(SRC)
 	@mkdir -p .timestamps
 	@touch $@
 
