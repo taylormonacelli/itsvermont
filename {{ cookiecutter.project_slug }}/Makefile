@@ -89,13 +89,13 @@ vet: .timestamps/.vet.time
 	@touch $@
 
 .PHONY: test # go test
-test: goimports
+test:
 	go test ./...
 	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: install # go install
-install: goimports
+install:
 	go install -ldflags "$(LDFLAGS)"
 
 .PHONY: help # show makefile rules
