@@ -19,8 +19,8 @@ jobs:
     runs-on: {%raw%}${{ matrix.os }}{%endraw%}
     name: Build & Test
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
       with:
         go-version: '>=1.21.1'
     - name: Set GOVERSION environment variable (Linux/macOS)
@@ -34,7 +34,7 @@ jobs:
         go build -v
         go test ./...
     - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v4
+      uses: goreleaser/goreleaser-action@v6
       with:
         args: release --snapshot --skip=publish --clean
     - name: Colored Output Test
