@@ -4,12 +4,16 @@
     "config:recommended"
   ],
   "schedule": [
-    "every weekend"
+    "at any time"
   ],
   "packageRules": [
     {
       "matchDepTypes": ["*"],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "branch",
+      "automergeStrategy": "fast-forward",
+      "requiredStatusChecks": null
     }
-  ]
+  ],
+  "platformAutomerge": true
 }
